@@ -16,13 +16,14 @@ import getpass
 import datetime
 import lxml
 import sqlserverconnection
+import os
     
 #%%
 
 class class_get_economic_data_from_investing_com():
     
     CONSTANTS_STR_INVESTING_COM_URL = 'https://www.investing.com/economic-calendar/'
-    CONSTANTS_STR_CHROME_DRIVER_FILE_PATH = './chromedriver/chromedriver.exe'
+    CONSTANTS_STR_CHROME_DRIVER_FILE_PATH = f"{os.path.dirname(__file__)}/chromedriver/chromedriver.exe"
     
     def __init__(self,
                  str_start_date = None,
@@ -467,3 +468,5 @@ if __name__ == '__main__':
     
 
 
+
+# %%
