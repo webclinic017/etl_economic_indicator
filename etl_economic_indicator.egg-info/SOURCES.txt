@@ -49,6 +49,7 @@ setup.py
 .eggs/tomli-1.2.1-py3.9.egg/tomli/_re.py
 .eggs/tomli-1.2.1-py3.9.egg/tomli/py.typed
 dist/etl_economic_indicator-0.1.dev0.tar.gz
+dist/etl_economic_indicator-0.1.dev1+g59e97c9.d20210905.tar.gz
 etl_economic_indicator/__init__.py
 etl_economic_indicator/get_economic_data_from_investing_com.py
 etl_economic_indicator.egg-info/PKG-INFO

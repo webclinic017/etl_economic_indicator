@@ -251,7 +251,7 @@ class class_get_economic_data_from_investing_com():
     
     def _func_str_extract_month_from_economic_event(self,
                                                     x: (str) = None):
-        _list_of_months = ['(Jan)','(Feb)','(Mar)','(Apr)','(May)','(Jun)','(Jul)','(Aug)','(Sep)','(Aug)','(Nov)','(Dec)','(Q1)','(Q2)','(Q3)','(Q4)']
+        _list_of_months = ['(Jan)','(Feb)','(Mar)','(Apr)','(May)','(Jun)','(Jul)','(Aug)','(Sep)','(Oct)','(Nov)','(Dec)','(Q1)','(Q2)','(Q3)','(Q4)']
         
         if str(x) != 'nan':
             for _month in _list_of_months:
