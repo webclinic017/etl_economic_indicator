@@ -56,5 +56,4 @@ etl_economic_indicator.egg-info/dependency_links.txt
 etl_economic_indicator.egg-info/requires.txt
 etl_economic_indicator.egg-info/top_level.txt
 etl_economic_indicator/chromedriver/chromedriver
-etl_economic_indicator/chromedriver/chromedriver_linux64.zip
 etl_economic_indicator/chromedriver/chromedriver_windows.exe

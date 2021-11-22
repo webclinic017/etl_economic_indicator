@@ -33,6 +33,20 @@ class class_get_economic_data_from_investing_com():
     def __init__(self):
         
     
+
+
+        if os.name == 'nt':
+            self.obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_driver = "SQL Server Native Client 11.0",
+                                                    _str_server = "LAPTOP-9O71KA1L",
+                                                    _str_database = 'db_economic_data_indicators',
+                                                    _str_trusted_connection = 'yes',
+                                                    str_download_or_upload = 'upload')
+        elif os.name == 'posix':
+            self.obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_server = "localhost",
+                                                        _str_database = 'db_economic_data_indicators',
+                                                        _str_trusted_connection = 'no',
+                                                        str_download_or_upload = 'upload')
+                                                        
         str_sql_query = """
         
         SELECT DateAdd(Day, -1, Max(Convert(Date, [Date] )))
@@ -40,13 +54,8 @@ class class_get_economic_data_from_investing_com():
         
         """
 
-        obj_sql_connection  = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_server = "localhost",
-                                                _str_database = 'db_economic_data_indicators',
-                                                _str_trusted_connection = 'no',
-                                                str_download_or_upload = 'download')
-
         df = pd.read_sql(sql = str_sql_query,
-                        con = obj_sql_connection
+                        con = self.obj_sql_connection
                         )
 
         self.str_start_date = str(df.iloc[0,0])
@@ -98,21 +107,11 @@ class class_get_economic_data_from_investing_com():
                                         df_data = None,
                                         bool_sqlserver_upload_append_or_replace = 'append'):
         
-        if os.name == 'nt':
-            obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_driver = "SQL Server Native Client 11.0",
-                                                    _str_server = "LAPTOP-9O71KA1L",
-                                                    _str_database = 'db_economic_data_indicators',
-                                                    _str_trusted_connection = 'yes',
-                                                    str_download_or_upload = 'upload')
-        elif os.name == 'posix':
-            obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_server = "localhost",
-                                                        _str_database = 'db_economic_data_indicators',
-                                                        _str_trusted_connection = 'no',
-                                                        str_download_or_upload = 'upload')
+
 
         df_data.to_sql('tbl_economic_data_indicator_investing_com', 
                         schema='dbo', 
-                        con = obj_sql_connection, 
+                        con = self.obj_sql_connection, 
                         if_exists = bool_sqlserver_upload_append_or_replace,
                         index= False)
         
@@ -144,60 +143,62 @@ class class_get_economic_data_from_investing_com():
 
         #_username = getpass.getuser()
         
-        obj_chrome_driver.get(self.CONSTANTS_STR_INVESTING_COM_URL)
-        time.sleep(10)
+        
         
         
         def _func_remove_popup():
             actions = ActionChains(obj_chrome_driver)
             actions.send_keys(Keys.ESCAPE).perform()
         
-    
-        try:
-            obj_chrome_driver.find_element_by_id('datePickerToggleBtn').click()
-            time.sleep(3)
-        except Exception:
-            time.sleep(3) 
-            _func_remove_popup()
-            time.sleep(3) 
-            obj_chrome_driver.find_element_by_id('datePickerToggleBtn').click()
-            time.sleep(3)
-        
-        
+        while True:
+            print(f'Opening {self.CONSTANTS_STR_INVESTING_COM_URL}')
+            obj_chrome_driver.get(self.CONSTANTS_STR_INVESTING_COM_URL)
+            time.sleep(10)
 
-        
-        try:
-            startDate_html_link = obj_chrome_driver.find_element_by_id('startDate')
-            time.sleep(3)
-        except Exception:
-            _func_remove_popup()
-            time.sleep(3) 
-            startDate_html_link = obj_chrome_driver.find_element_by_id('startDate')
-            time.sleep(3)    
-        
-        
-        for i in range(10):
-            startDate_html_link.send_keys(Keys.BACKSPACE)
-        
-        
-        startDate_html_link.send_keys(str_start_date)
-        endDate_html_link = obj_chrome_driver.find_element_by_id('endDate')
-        
-        for i in range(10):
-            endDate_html_link.send_keys(Keys.BACKSPACE)
+            try:
+                obj_chrome_driver.find_element_by_id('datePickerToggleBtn').click()
+                time.sleep(3)
+            except Exception:
+                time.sleep(3) 
+                _func_remove_popup()
+                time.sleep(3) 
+                obj_chrome_driver.find_element_by_id('datePickerToggleBtn').click()
+                time.sleep(3)
+
             
-        
-        endDate_html_link.send_keys(str_end_date)
-        
-        
-        try:
-            obj_chrome_driver.find_element_by_id('applyBtn').click()
-            time.sleep(3)
-        except Exception:
-            _func_remove_popup()
-            time.sleep(3) 
-            obj_chrome_driver.find_element_by_id('applyBtn').click()
-            time.sleep(3)      
+            try:
+                startDate_html_link = obj_chrome_driver.find_element_by_id('startDate')
+                time.sleep(3)
+            except Exception:
+                _func_remove_popup()
+                time.sleep(3) 
+                startDate_html_link = obj_chrome_driver.find_element_by_id('startDate')
+                time.sleep(3)    
+            
+            
+            for i in range(10):
+                startDate_html_link.send_keys(Keys.BACKSPACE)
+            
+            
+            startDate_html_link.send_keys(str_start_date)
+            endDate_html_link = obj_chrome_driver.find_element_by_id('endDate')
+            
+            for i in range(10):
+                endDate_html_link.send_keys(Keys.BACKSPACE)
+                
+            
+            endDate_html_link.send_keys(str_end_date)
+            
+            
+            try:
+                obj_chrome_driver.find_element_by_id('applyBtn').click()
+                time.sleep(3)
+                break
+            except Exception:
+                _func_remove_popup()
+                time.sleep(3) 
+                pass
+                
 
         try:
             obj_chrome_driver.find_element_by_id('filterStateAnchor').click()

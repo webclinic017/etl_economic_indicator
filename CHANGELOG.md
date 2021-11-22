@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 ## v1.0.1 - 11/22/2021
+  1. Bug fix - Added while loop for failed clicks in Apply Button id
+  2. Bug fix - Added sql connection for windows for getting the latest date available
+
+## v1.0.1 - 11/22/2021
   1. Add feature - run in ubuntu
 
 ## v1.0.1 - 2021-09-06
