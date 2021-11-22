@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 import time
 import urllib.request
 from bs4 import BeautifulSoup
@@ -17,23 +18,45 @@ import datetime
 import lxml
 import sqlserverconnection
 import os
-    
+from datetime import datetime
+
 #%%
 
 class class_get_economic_data_from_investing_com():
     
     CONSTANTS_STR_INVESTING_COM_URL = 'https://www.investing.com/economic-calendar/'
-    CONSTANTS_STR_CHROME_DRIVER_FILE_PATH = f"{os.path.dirname(__file__)}/chromedriver/chromedriver.exe"
+    if os.name == 'nt':
+        CONSTANTS_STR_CHROME_DRIVER_FILE_PATH = f"{os.path.dirname(__file__)}/chromedriver/chromedriver_windows.exe"
+    elif os.name == 'posix':
+        CONSTANTS_STR_CHROME_DRIVER_FILE_PATH = f"{os.path.dirname(__file__)}/chromedriver/chromedriver"
     
-    def __init__(self,
-                 str_start_date = None,
-                 str_end_date = None):
+    def __init__(self):
         
-        self.str_start_date = str_start_date
-        self.str_end_date = str_end_date
+    
+        str_sql_query = """
+        
+        SELECT DateAdd(Day, -1, Max(Convert(Date, [Date] )))
+        FROM [db_economic_data_indicators].[dbo].[tbl_economic_data_indicator_investing_com]
+        
+        """
+
+        obj_sql_connection  = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_server = "localhost",
+                                                _str_database = 'db_economic_data_indicators',
+                                                _str_trusted_connection = 'no',
+                                                str_download_or_upload = 'download')
+
+        df = pd.read_sql(sql = str_sql_query,
+                        con = obj_sql_connection
+                        )
+
+        self.str_start_date = str(df.iloc[0,0])
+        self.str_end_date = datetime.today().strftime('%Y-%m-%d')
+        
+        self.func_df_get_economic_data(bool_upload_data_to_sqlserver_True_or_False = True,
+                                                        bool_sqlserver_upload_append_or_replace = 'append')
     
     ######################################################################
-    
+
     def func_df_get_economic_data(self,
                                   bool_upload_data_to_sqlserver_True_or_False = False,
                                   bool_sqlserver_upload_append_or_replace = 'append'):
@@ -75,11 +98,17 @@ class class_get_economic_data_from_investing_com():
                                         df_data = None,
                                         bool_sqlserver_upload_append_or_replace = 'append'):
         
-        obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_driver = "SQL Server Native Client 11.0",
-                                                _str_server = "LAPTOP-9O71KA1L",
-                                                _str_database = 'db_economic_data_indicators',
-                                                _str_trusted_connection = 'yes',
-                                                str_download_or_upload = 'upload')
+        if os.name == 'nt':
+            obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_driver = "SQL Server Native Client 11.0",
+                                                    _str_server = "LAPTOP-9O71KA1L",
+                                                    _str_database = 'db_economic_data_indicators',
+                                                    _str_trusted_connection = 'yes',
+                                                    str_download_or_upload = 'upload')
+        elif os.name == 'posix':
+            obj_sql_connection = sqlserverconnection.CONNECT_TO_SQL_SERVER(_str_server = "localhost",
+                                                        _str_database = 'db_economic_data_indicators',
+                                                        _str_trusted_connection = 'no',
+                                                        str_download_or_upload = 'upload')
 
         df_data.to_sql('tbl_economic_data_indicator_investing_com', 
                         schema='dbo', 
@@ -97,10 +126,22 @@ class class_get_economic_data_from_investing_com():
         
         
     
-        obj_chrome_driver = webdriver.Chrome(executable_path = self.CONSTANTS_STR_CHROME_DRIVER_FILE_PATH)
+        
+        if os.name == 'posix':
+            
+            str_binary_location = '/usr/bin/google-chrome'
+            #options = webdriver.ChromeOptions()
+            #options.binary_location = str_binary_location
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
 
-        
-        
+            obj_chrome_driver = webdriver.Chrome(executable_path = self.CONSTANTS_STR_CHROME_DRIVER_FILE_PATH,
+                                                 chrome_options= chrome_options)
+
+        elif os.name == 'nt':
+            obj_chrome_driver = webdriver.Chrome(executable_path = self.CONSTANTS_STR_CHROME_DRIVER_FILE_PATH)
+
         #_username = getpass.getuser()
         
         obj_chrome_driver.get(self.CONSTANTS_STR_INVESTING_COM_URL)
@@ -452,19 +493,13 @@ class class_get_economic_data_from_investing_com():
         
         return df_data
 
+
+
+
 #%% Save Output.csv
 
 if __name__ == '__main__':    
-    #Earliest data available is 1/1/1970
-    str_date_filter_from = '1/1/1970'
-    str_date_filter_to = '9/6/2021'
-    
-    ged = class_get_economic_data_from_investing_com(   str_start_date = str_date_filter_from,
-                                                        str_end_date = str_date_filter_to
-                                                    )
-    
-    df_economic_data = ged.func_df_get_economic_data(bool_upload_data_to_sqlserver_True_or_False = True,
-                                                     bool_sqlserver_upload_append_or_replace = 'append')
+    class_get_economic_data_from_investing_com()
     
 
 
