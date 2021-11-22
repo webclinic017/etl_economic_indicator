@@ -1,0 +1,7 @@
+lxml==4.6.3
+selenium==3.141.0
+numpy==1.21.1
+pandas==1.2.5
+sql_connection==2.1.2.dev0+gc4024fc.d20211120
+beautifulsoup4==4.10.0
+packaging==20.9
