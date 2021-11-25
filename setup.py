@@ -10,7 +10,7 @@ classifiers = [
 
 setup(
 name = 'etl_economic_indicator',
-version ='2.0.0',
+version ='2.0.1',
 description = 'etl_economic_indicator is a a python program that download the economic data indicators in investing.com and upload it to a sql server database',
 url= 'https://github.com/Iankfc/etl_economic_indicator',
 author='ece',

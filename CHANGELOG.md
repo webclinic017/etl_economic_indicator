@@ -1,6 +1,8 @@
 
 # Change Log
 All notable changes to this project will be documented in this file.
+## v2.0.1 - 11/26/2021
+  1. add error handler
 ## v2.0.0 - 11/26/2021
   1 Update python dependencies
 ## v1.0.1 - 11/22/2021
