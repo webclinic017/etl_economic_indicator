@@ -53,12 +53,17 @@ class class_get_economic_data_from_investing_com():
         FROM [db_economic_data_indicators].[dbo].[tbl_economic_data_indicator_investing_com]
         
         """
+        try:
+            df = pd.read_sql(sql = str_sql_query,
+                            con = self.obj_sql_connection
+                            )
+            self.str_start_date = str(df.iloc[0,0])
+        except Exception:
+            print('No tbl_economic_data_indicator_investing_com table available yet')
+            self.str_start_date = '1/1/1970'
 
-        df = pd.read_sql(sql = str_sql_query,
-                        con = self.obj_sql_connection
-                        )
 
-        self.str_start_date = str(df.iloc[0,0])
+        
         self.str_end_date = datetime.today().strftime('%Y-%m-%d')
         
         self.func_df_get_economic_data(bool_upload_data_to_sqlserver_True_or_False = True,
