@@ -3,6 +3,6 @@ lxml==4.6.4
 numpy==1.21.1
 packaging==20.9
 pandas==1.2.5
-selenium==4.0.0
+selenium==4.1.0
 setuptools==58.0.4
-sql_connection==2.1.2.dev0+gc4024fc.d20211120
+sql_connection==2.1.3.dev0+g46621b7.d20211125

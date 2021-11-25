@@ -1,6 +1,8 @@
 
 # Change Log
 All notable changes to this project will be documented in this file.
+## v2.0.0 - 11/26/2021
+  1 Update python dependencies
 ## v1.0.1 - 11/22/2021
   1. Bug fix - Added while loop for failed clicks in Apply Button id
   2. Bug fix - Added sql connection for windows for getting the latest date available

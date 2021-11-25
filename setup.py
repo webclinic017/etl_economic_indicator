@@ -10,7 +10,7 @@ classifiers = [
 
 setup(
 name = 'etl_economic_indicator',
-version ='1.1.1',
+version ='2.0.0',
 description = 'etl_economic_indicator is a a python program that download the economic data indicators in investing.com and upload it to a sql server database',
 url= 'https://github.com/Iankfc/etl_economic_indicator',
 author='ece',
@@ -22,11 +22,5 @@ packages=find_packages(),
 use_scm_version=True,
 include_package_data=True,
 setup_requires=['setuptools_scm'],
-install_requires=[  'lxml==4.6.3',
-                    'selenium==3.141.0',
-                    'numpy==1.21.1',
-                    'pandas==1.2.5',
-                    'sql_connection==2.1.2.dev0+gc4024fc.d20211120',
-                    'beautifulsoup4==4.10.0',
-                    'packaging==20.9']
+install_requires = open('requirements.txt','r').read().split('\n')[:-1]
 )
