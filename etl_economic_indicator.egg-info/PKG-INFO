@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: etl-economic-indicator
+Version: 2.0.0
+Summary: etl_economic_indicator is a a python program that download the economic data indicators in investing.com and upload it to a sql server database
+Home-page: https://github.com/Iankfc/etl_economic_indicator
+Author: ece
+Author-email: odesk5@outlook.com
+License: None
+Keywords: None
+Platform: UNKNOWN
+Classifier: Developement Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Education
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.9.5
+
+UNKNOWN
+
